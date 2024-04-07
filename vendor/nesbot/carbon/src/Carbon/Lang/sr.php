@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-/**
+/*
  * Authors:
  * - Josh Soref
  * - François B
@@ -19,6 +19,9 @@
  * - Glavić
  * - Milos Sakovic
  */
+
+use Carbon\CarbonInterface;
+
 return [
     'year' => ':count godina|:count godine|:count godina',
     'y' => ':count g.',
@@ -30,9 +33,9 @@ return [
     'd' => ':count d.',
     'hour' => ':count sat|:count sata|:count sati',
     'h' => ':count č.',
-    'minute' => ':count minut|:count minuta |:count minuta',
+    'minute' => ':count minut|:count minuta|:count minuta',
     'min' => ':count min.',
-    'second' => ':count sekund|:count sekunde|:count sekunde',
+    'second' => ':count sekundu|:count sekunde|:count sekundi',
     's' => ':count sek.',
     'ago' => 'pre :time',
     'from_now' => 'za :time',
@@ -45,8 +48,12 @@ return [
     'week_ago' => ':count nedelju|:count nedelje|:count nedelja',
 
     'diff_now' => 'upravo sada',
+    'diff_today' => 'danas',
+    'diff_today_regexp' => 'danas(?:\\s+u)?',
     'diff_yesterday' => 'juče',
+    'diff_yesterday_regexp' => 'juče(?:\\s+u)?',
     'diff_tomorrow' => 'sutra',
+    'diff_tomorrow_regexp' => 'sutra(?:\\s+u)?',
     'diff_before_yesterday' => 'prekjuče',
     'diff_after_tomorrow' => 'preksutra',
     'formats' => [
@@ -60,36 +67,21 @@ return [
     'calendar' => [
         'sameDay' => '[danas u] LT',
         'nextDay' => '[sutra u] LT',
-        'nextWeek' => function (\Carbon\CarbonInterface $date) {
-            switch ($date->dayOfWeek) {
-                case 0:
-                    return '[у недељу у] LT';
-                case 3:
-                    return '[у среду у] LT';
-                case 6:
-                    return '[у суботу у] LT';
-                default:
-                    return '[у] dddd [у] LT';
-            }
+        'nextWeek' => static fn (CarbonInterface $date) => match ($date->dayOfWeek) {
+            0 => '[u nedelju u] LT',
+            3 => '[u sredu u] LT',
+            6 => '[u subotu u] LT',
+            default => '[u] dddd [u] LT',
         },
         'lastDay' => '[juče u] LT',
-        'lastWeek' => function (\Carbon\CarbonInterface $date) {
-            switch ($date->dayOfWeek) {
-                case 0:
-                    return '[прошле недеље у] LT';
-                case 1:
-                    return '[прошлог понедељка у] LT';
-                case 2:
-                    return '[прошлог уторка у] LT';
-                case 3:
-                    return '[прошле среде у] LT';
-                case 4:
-                    return '[прошлог четвртка у] LT';
-                case 5:
-                    return '[прошлог петка у] LT';
-                default:
-                    return '[прошле суботе у] LT';
-            }
+        'lastWeek' => static fn (CarbonInterface $date) => match ($date->dayOfWeek) {
+            0 => '[prošle nedelje u] LT',
+            1 => '[prošlog ponedeljka u] LT',
+            2 => '[prošlog utorka u] LT',
+            3 => '[prošle srede u] LT',
+            4 => '[prošlog četvrtka u] LT',
+            5 => '[prošlog petka u] LT',
+            default => '[prošle subote u] LT',
         },
         'sameElse' => 'L',
     ],
@@ -102,5 +94,4 @@ return [
     'first_day_of_week' => 1,
     'day_of_first_week_of_year' => 1,
     'list' => [', ', ' i '],
-    'meridiem' => ['пре подне', 'по подне'],
 ];

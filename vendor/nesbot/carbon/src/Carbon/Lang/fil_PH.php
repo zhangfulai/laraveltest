@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-/**
+/*
  * Authors:
  * - Rene Torres Rene Torres, Pablo Saratxaga rgtorre@rocketmail.com, pablo@mandrakesoft.com
  * - Jaycee Mariano (alohajaycee)
@@ -23,6 +23,7 @@ return array_replace_recursive(require __DIR__.'/en.php', [
     'weekdays' => ['Linggo', 'Lunes', 'Martes', 'Miyerkoles', 'Huwebes', 'Biyernes', 'Sabado'],
     'weekdays_short' => ['Lin', 'Lun', 'Mar', 'Miy', 'Huw', 'Biy', 'Sab'],
     'weekdays_min' => ['Lin', 'Lun', 'Mar', 'Miy', 'Huw', 'Biy', 'Sab'],
+    'first_day_of_week' => 0,
     'day_of_first_week_of_year' => 1,
     'meridiem' => ['N.U.', 'N.H.'],
 

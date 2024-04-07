@@ -13,8 +13,15 @@
  * Authors:
  * - Milos Sakovic
  * - Paul
+ * - Pete Scopes (pdscopes)
  */
 return [
+    /*
+     * {1}, {0} and ]1,Inf[ are not needed as it's the default for English pluralization.
+     * But as some languages are using en.php as a fallback, it's better to specify it
+     * explicitly so those languages also fallback to English pluralization when a unit
+     * is missing.
+     */
     'year' => '{1}:count year|{0}:count years|]1,Inf[:count years',
     'a_year' => '{1}a year|{0}:count years|]1,Inf[:count years',
     'y' => '{1}:countyr|{0}:countyrs|]1,Inf[:countyrs',
@@ -36,11 +43,18 @@ return [
     'second' => '{1}:count second|{0}:count seconds|]1,Inf[:count seconds',
     'a_second' => '{1}a few seconds|{0}:count seconds|]1,Inf[:count seconds',
     's' => ':counts',
+    'millisecond' => '{1}:count millisecond|{0}:count milliseconds|]1,Inf[:count milliseconds',
+    'a_millisecond' => '{1}a millisecond|{0}:count milliseconds|]1,Inf[:count milliseconds',
+    'ms' => ':countms',
+    'microsecond' => '{1}:count microsecond|{0}:count microseconds|]1,Inf[:count microseconds',
+    'a_microsecond' => '{1}a microsecond|{0}:count microseconds|]1,Inf[:count microseconds',
+    'µs' => ':countµs',
     'ago' => ':time ago',
     'from_now' => ':time from now',
     'after' => ':time after',
     'before' => ':time before',
     'diff_now' => 'just now',
+    'diff_today' => 'today',
     'diff_yesterday' => 'yesterday',
     'diff_tomorrow' => 'tomorrow',
     'diff_before_yesterday' => 'before yesterday',
@@ -54,11 +68,11 @@ return [
     'weekdays' => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     'weekdays_short' => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     'weekdays_min' => ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-    'ordinal' => function ($number) {
+    'ordinal' => static function ($number) {
         $lastDigit = $number % 10;
 
         return $number.(
-            (~~($number % 100 / 10) === 1) ? 'th' : (
+            ((int) ($number % 100 / 10) === 1) ? 'th' : (
                 ($lastDigit === 1) ? 'st' : (
                     ($lastDigit === 2) ? 'nd' : (
                         ($lastDigit === 3) ? 'rd' : 'th'
@@ -67,7 +81,15 @@ return [
             )
         );
     },
+    'formats' => [
+        'LT' => 'h:mm A',
+        'LTS' => 'h:mm:ss A',
+        'L' => 'MM/DD/YYYY',
+        'LL' => 'MMMM D, YYYY',
+        'LLL' => 'MMMM D, YYYY h:mm A',
+        'LLLL' => 'dddd, MMMM D, YYYY h:mm A',
+    ],
     'list' => [', ', ' and '],
-    'first_day_of_week' => 0,
+    'first_day_of_week' => 1,
     'day_of_first_week_of_year' => 1,
 ];

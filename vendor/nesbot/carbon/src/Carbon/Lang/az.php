@@ -46,8 +46,11 @@ return [
     'after' => ':time sonra',
     'before' => ':time əvvəl',
     'diff_now' => 'indi',
+    'diff_today' => 'bugün',
+    'diff_today_regexp' => 'bugün(?:\\s+saat)?',
     'diff_yesterday' => 'dünən',
     'diff_tomorrow' => 'sabah',
+    'diff_tomorrow_regexp' => 'sabah(?:\\s+saat)?',
     'diff_before_yesterday' => 'srağagün',
     'diff_after_tomorrow' => 'birisi gün',
     'period_recurrences' => ':count dəfədən bir',
@@ -70,7 +73,7 @@ return [
         'lastWeek' => '[keçən həftə] dddd [saat] LT',
         'sameElse' => 'L',
     ],
-    'ordinal' => function ($number) {
+    'ordinal' => static function ($number) {
         if ($number === 0) { // special case for zero
             return "$number-ıncı";
         }
@@ -100,7 +103,7 @@ return [
 
         return $number.($suffixes[$lastDigit] ?? $suffixes[$number % 100 - $lastDigit] ?? $suffixes[$number >= 100 ? 100 : -1] ?? '');
     },
-    'meridiem' => function ($hour) {
+    'meridiem' => static function ($hour) {
         if ($hour < 4) {
             return 'gecə';
         }

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-/**
+/*
  * Authors:
  * - Adam
  * - monkeycon
@@ -45,6 +45,8 @@ return [
     'from_now' => ':time後',
     'after' => ':time後',
     'before' => ':time前',
+    'diff_now' => '現在',
+    'diff_today' => '今天',
     'diff_yesterday' => '昨天',
     'diff_tomorrow' => '明天',
     'formats' => [
@@ -63,22 +65,15 @@ return [
         'lastWeek' => '[上]dddd LT',
         'sameElse' => 'L',
     ],
-    'ordinal' => function ($number, $period) {
-        switch ($period) {
-            case 'd':
-            case 'D':
-            case 'DDD':
-                return $number.'日';
-            case 'M':
-                return $number.'月';
-            case 'w':
-            case 'W':
-                return $number.'周';
-            default:
-                return $number;
-        }
+    'ordinal' => static function ($number, $period) {
+        return match ($period) {
+            'd', 'D', 'DDD' => $number.'日',
+            'M' => $number.'月',
+            'w', 'W' => $number.'周',
+            default => $number,
+        };
     },
-    'meridiem' => function ($hour, $minute) {
+    'meridiem' => static function ($hour, $minute) {
         $time = $hour * 100 + $minute;
         if ($time < 600) {
             return '凌晨';

@@ -5,8 +5,10 @@ namespace Illuminate\Auth\Middleware;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
+use Illuminate\Http\Request;
 
-class Authenticate
+class Authenticate implements AuthenticatesRequests
 {
     /**
      * The authentication factory instance.
@@ -14,6 +16,13 @@ class Authenticate
      * @var \Illuminate\Contracts\Auth\Factory
      */
     protected $auth;
+
+    /**
+     * The callback that should be used to generate the authentication redirect path.
+     *
+     * @var callable
+     */
+    protected static $redirectToCallback;
 
     /**
      * Create a new middleware instance.
@@ -24,6 +33,18 @@ class Authenticate
     public function __construct(Auth $auth)
     {
         $this->auth = $auth;
+    }
+
+    /**
+     * Specify the guards for the middleware.
+     *
+     * @param  string  $guard
+     * @param  string  $others
+     * @return string
+     */
+    public static function using($guard, ...$others)
+    {
+        return static::class.':'.implode(',', [$guard, ...$others]);
     }
 
     /**
@@ -79,7 +100,9 @@ class Authenticate
     protected function unauthenticated($request, array $guards)
     {
         throw new AuthenticationException(
-            'Unauthenticated.', $guards, $this->redirectTo($request)
+            'Unauthenticated.',
+            $guards,
+            $request->expectsJson() ? null : $this->redirectTo($request),
         );
     }
 
@@ -89,8 +112,21 @@ class Authenticate
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
-    protected function redirectTo($request)
+    protected function redirectTo(Request $request)
     {
-        //
+        if (static::$redirectToCallback) {
+            return call_user_func(static::$redirectToCallback, $request);
+        }
+    }
+
+    /**
+     * Specify the callback that should be used to generate the redirect path.
+     *
+     * @param  callable  $redirectToCallback
+     * @return void
+     */
+    public static function redirectUsing(callable $redirectToCallback)
+    {
+        static::$redirectToCallback = $redirectToCallback;
     }
 }
